@@ -1,0 +1,54 @@
+.navbar {
+  background-color: #000b58;
+}
+
+.navbar-brand,
+.navbar-brand:hover {
+  color: #ffffff;
+  font-family: "Fira Sans", serif;
+  font-size: 2vw;
+}
+
+.navbar-toggler-icon {
+  background-color: #ffffff;
+}
+
+.navbar-nav .nav-link {
+  color: #ffffff;
+  font-family: "Fira Sans", serif;
+  font-size: 1.3vw;
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}
+
+h1 {
+  color: #000b58;
+  font-size: 4vw;
+}
+
+h3 {
+  color: #000b58;
+  font-size: 2vw;
+}
+
+.smaller-input {
+  width: 600px;
+}
+
+.btn-primary {
+  background-color: #000b58;
+  border-color: #000b58;
+}
+
+@media screen and (max-width: 992px) {
+  .navbar-brand,
+  .navbar-brand:hover {
+    font-size: 20px;
+  }
+
+  .navbar-nav .nav-link {
+    font-size: 16px;
+  }
+}
