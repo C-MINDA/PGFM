@@ -50,10 +50,29 @@ h3 {
   padding: 20px 25px;
 }
 
-.section-header-white h2 {
+.section-header-white h2,
+.section-header-white p {
   color: #ffffff;
   font-family: "Fira Sans", serif;
   font-size: 2vw;
+}
+
+.chart-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chart {
+  width: 60vw;
+  height: 35vh;
+  display: flex;
+  align-items: center;
+}
+
+.chart-text {
+  margin-left: 30px;
+  /* max-width: 30%; */
 }
 
 @media screen and (max-width: 992px) {
@@ -74,5 +93,22 @@ h3 {
   h3 {
     color: #000b58;
     font-size: 3.5vw;
+  }
+
+  .chart-container {
+    flex-direction: column;
+  }
+
+  .chart {
+    width: 90vw;
+    height: 25vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .chart-text {
+    /* margin-top: 20px; */
+    margin-left: 0px;
   }
 }

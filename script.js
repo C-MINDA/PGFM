@@ -107,6 +107,23 @@ function renderChart(dates, prices, ticker) {
   });
 }
 
+// Render the default chart as soon as the page loads
+window.onload = async function () {
+  // Set default value for stockInput when the page loads
+  let stockTicker = "AAPL";
+
+  // Fetch historical stock prices and render the chart immediately
+  try {
+    let data = await getHistoricalStockPrices(stockTicker);
+    if (data) {
+      console.log("Rendering chart with default stock data...");
+      renderChart(data.dates, data.prices, stockTicker);
+    }
+  } catch (error) {
+    console.log("Error fetching historical stock data:", error);
+  }
+};
+
 // Function: Get user input and return stock data to render chart
 const stockInput = document.getElementById("stockInput");
 const stockButton = document.getElementById("stockInput-btn");
