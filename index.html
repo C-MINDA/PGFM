@@ -38,8 +38,11 @@
     <!-- Axios API -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-    <!-- Link to the CSS & Javascript file -->
-    <script src="script.js"></script>
+    <!-- Chart JS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+
+    <!-- Link to the CSS file -->
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -97,7 +100,7 @@
 
     <main>
       <!-- Search Panel -->
-      <section>
+      <section id="section-1">
         <div class="container-lg text-center">
           <h1 class="mt-4 animate__animated animate__fadeInDown">
             Unlock smarter investing with AI
@@ -106,7 +109,9 @@
             Designed for beginners ready to take control <br />
             of their financial future
           </h3>
-          <div class="row mt-5 justify-content-center">
+          <div
+            class="row mt-5 justify-content-center animate__animated animate__fadeInDown"
+          >
             <div class="col-auto">
               <div class="d-flex">
                 <input
@@ -118,6 +123,7 @@
                   class="btn btn-primary ms-3"
                   type="submit"
                   value="Submit"
+                  id="stockInput-btn"
                 />
               </div>
             </div>
@@ -126,7 +132,14 @@
       </section>
 
       <!-- Everything about <Stock Ticker> -->
-      <section></section>
+      <section class="bg-full-width mt-5">
+        <div class="section-header-white">
+          <h2 id="section-2">Everything about AAPL.</h2>
+          <div style="width: 800px; height: 400px">
+            <canvas id="stockChart" class="mt-3"></canvas>
+          </div>
+        </div>
+      </section>
 
       <!-- Stay Informed: The Latest Developments on <Stock Ticker>. -->
       <section></section>
@@ -139,5 +152,9 @@
     </main>
 
     <footer></footer>
+
+    <!-- Link to the Javascript file -->
+    <script src="config.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>
