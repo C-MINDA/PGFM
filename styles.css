@@ -60,20 +60,59 @@ h3 {
 .chart-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 
 .chart {
   width: 60vw;
-  height: 35vh;
+  height: 30vw;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .chart-text {
   margin-left: 30px;
-  /* max-width: 30%; */
+  max-width: 30%;
 }
+
+.white-bg-full-width {
+  background-color: #ffffff;
+  width: 100%;
+  padding: 20px 25px;
+}
+
+.news-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.section-header-blue h2,
+.section-header-blue h5 {
+  color: #000b58;
+  font-family: "Fira Sans", serif;
+  font-size: 2vw;
+}
+
+.section-header-blue p {
+  color: #000b58;
+  font-family: "Fira Sans", serif;
+  font-size: 1.3vw;
+}
+
+.smallest-input {
+  width: 25vw;
+}
+
+.btn-stockPriceInput,
+.btn-stockPriceInput:focus {
+  background-color: #ffffff;
+}
+
+/* #datepicker {
+  width: 300px;
+} */
 
 @media screen and (max-width: 992px) {
   .navbar-brand,
@@ -95,20 +134,56 @@ h3 {
     font-size: 3.5vw;
   }
 
+  .btn {
+    font-size: 2vw;
+  }
+
+  .smaller-input::placeholder {
+    font-size: 2vw;
+    color: gray;
+  }
+
+  .section-header-white h2,
+  .section-header-white p {
+    color: #ffffff;
+    font-family: "Fira Sans", serif;
+    font-size: 3vw;
+  }
+
   .chart-container {
     flex-direction: column;
   }
 
   .chart {
-    width: 90vw;
-    height: 25vh;
+    width: 80vw;
+    height: 50vw;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
   .chart-text {
-    /* margin-top: 20px; */
+    margin-top: 20px;
     margin-left: 0px;
+    max-width: 100%;
+  }
+
+  .chart-text {
+    margin-top: 20px;
+    margin-left: 0px;
+    max-width: 100%;
+  }
+
+  .section-header-blue h2,
+  .section-header-blue h5 {
+    color: #000b58;
+    font-family: "Fira Sans", serif;
+    font-size: 3vw;
+  }
+
+  .section-header-blue p {
+    color: #000b58;
+    font-family: "Fira Sans", serif;
+    font-size: 2.5vw;
   }
 }

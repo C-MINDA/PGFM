@@ -48,6 +48,10 @@ let stockChartInstance;
 function renderChart(dates, prices, ticker) {
   const ctx = document.getElementById("stockChart").getContext("2d");
 
+  // Responsive font size based on screen width
+  const responsiveFontSize = window.innerWidth < 992 ? 6 : 14;
+  const responsiveTitleFontSize = window.innerWidth < 992 ? 8 : 16;
+
   // If a chart instance already exists, destroy it
   if (stockChartInstance) {
     stockChartInstance.destroy();
@@ -69,6 +73,8 @@ function renderChart(dates, prices, ticker) {
       ],
     },
     options: {
+      responsive: true, // Make the chart responsive
+      maintainAspectRatio: false, // Allows the chart to adjust dimensions
       scales: {
         x: {
           type: "time",
@@ -79,9 +85,15 @@ function renderChart(dates, prices, ticker) {
             display: true,
             text: "Date",
             color: "white", // Change x-axis title color to white
+            font: {
+              size: responsiveTitleFontSize, // Responsive font size for title
+            },
           },
           ticks: {
             color: "white", // Change x-axis tick label color to white
+            font: {
+              size: responsiveFontSize, // Responsive font size for tick labels
+            },
           },
         },
         y: {
@@ -89,9 +101,15 @@ function renderChart(dates, prices, ticker) {
             display: true,
             text: "Price (USD)",
             color: "white", // Change y-axis title color to white
+            font: {
+              size: responsiveTitleFontSize, // Responsive font size for title
+            },
           },
           ticks: {
             color: "white", // Change y-axis tick label color to white
+            font: {
+              size: responsiveFontSize, // Responsive font size for tick labels
+            },
           },
         },
       },
@@ -100,6 +118,9 @@ function renderChart(dates, prices, ticker) {
           display: true,
           labels: {
             color: "white", // Change legend label color to white
+            font: {
+              size: responsiveFontSize, // Responsive font size for legend labels
+            },
           },
         },
       },
@@ -158,3 +179,21 @@ stockInput.addEventListener("keydown", (event) => {
     handleStockInput();
   }
 });
+
+new tempusDominus.TempusDominus(
+  document.getElementById("kt_td_picker_date_only"),
+  {
+    display: {
+      viewMode: "calendar",
+      components: {
+        decades: true,
+        year: true,
+        month: true,
+        date: true,
+        hours: false,
+        minutes: false,
+        seconds: false,
+      },
+    },
+  }
+);

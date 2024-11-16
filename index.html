@@ -38,6 +38,21 @@
     <!-- Axios API -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
+    <!-- Date input tempus-dominus -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.4/dist/js/tempus-dominus.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.4/dist/css/tempus-dominus.min.css"
+      crossorigin="anonymous"
+    />
+
     <!-- Chart JS -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
@@ -133,26 +148,145 @@
 
       <!-- Everything about <Stock Ticker> -->
       <section class="bg-full-width mt-5">
-        <div class="section-header-white">
+        <div class="section-header-white mb-5">
           <h2 id="section-2">Everything about AAPL.</h2>
           <!-- Flex container for chart and text -->
-        <div class= "chart-container">
-          <div class="chart">
-            <canvas id="stockChart"></canvas>
-          </div>
-          <div class="chart-text">
-            <p><strong>Stock Information:</strong></p>
-            <p>This chart shows the daily closing price for AAPL stock over the last month. Use this data to track the stock's performance and make informed investment decisions.</p>
-            <p>Note: Data is retrieved from Alpha Vantage API.</p>
+          <div class="chart-container mt-3">
+            <div class="chart">
+              <canvas id="stockChart"></canvas>
+            </div>
+            <div class="chart-text">
+              <p><strong>Stock Information:</strong></p>
+              <p>
+                This chart shows the daily closing price for AAPL stock over the
+                last month. Use this data to track the stock's performance and
+                make informed investment decisions.
+              </p>
+              <p>Note: Data is retrieved from Alpha Vantage API.</p>
+            </div>
           </div>
         </div>
       </section>
 
       <!-- Stay Informed: The Latest Developments on <Stock Ticker>. -->
-      <section></section>
+      <section class="white-bg-full-width">
+        <div class="section-header-blue">
+          <h2 id="section-3">
+            Stay Informed: The Latest Developments on AAPL.
+          </h2>
+          <div class="news-container mt-3">
+            <div class="card mt-3" style="width: 18rem">
+              <img
+                class="card-img-top"
+                src="https://www.freeiconspng.com/thumbs/financial-icon-png/finance-a-icons-free-icons-in-google-apps--icon-search-engine--14.png"
+                alt="Card image cap"
+              />
+              <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">
+                  Some quick example text to build on the card title and make up
+                  the bulk of the card's content.
+                </p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+              </div>
+            </div>
+            <div class="card mt-3" style="width: 18rem">
+              <img
+                class="card-img-top"
+                src="https://www.freeiconspng.com/thumbs/financial-icon-png/finance-a-icons-free-icons-in-google-apps--icon-search-engine--14.png"
+                alt="Card image cap"
+              />
+              <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">
+                  Some quick example text to build on the card title and make up
+                  the bulk of the card's content.
+                </p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+              </div>
+            </div>
+            <div class="card mt-3" style="width: 18rem">
+              <img
+                class="card-img-top"
+                src="https://www.freeiconspng.com/thumbs/financial-icon-png/finance-a-icons-free-icons-in-google-apps--icon-search-engine--14.png"
+                alt="Card image cap"
+              />
+              <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">
+                  Some quick example text to build on the card title and make up
+                  the bulk of the card's content.
+                </p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <!-- See how much your investments could have earned till date. -->
-      <section></section>
+      <section class="bg-full-width mt-5">
+        <div class="section-header-white">
+          <h2 id="section-4">
+            See how much your investments could have earned till date.
+          </h2>
+          <div class="d-flex mt-3">
+            <input
+              class="form-control smallest-input"
+              id="stockPriceInput"
+              placeholder="Enter stock purchase price..."
+            />
+            <input
+              class="btn btn-stockPriceInput ms-3"
+              type="submit"
+              value="Submit"
+              id="stockPriceInput-btn"
+            />
+          </div>
+
+          <!-- Datepicker -->
+          <div
+            class="input-group"
+            id="kt_td_picker_date_only"
+            data-td-target-input="nearest"
+            data-td-target-toggle="nearest"
+          >
+            <input
+              id="kt_td_picker_date_only_input"
+              type="text"
+              class="form-control"
+              data-td-target="#kt_td_picker_date_only"
+            />
+            <span
+              class="input-group-text"
+              data-td-target="#kt_td_picker_date_only"
+              data-td-toggle="datetimepicker"
+            >
+              <i class="ki-duotone ki-calendar fs-2"
+                ><span class="path1"></span><span class="path2"></span
+              ></i>
+            </span>
+          </div>
+
+          <!-- placeholder -->
+          <div class="card mt-3" style="width: 18rem">
+            <img
+              class="card-img-top"
+              src="https://www.freeiconspng.com/thumbs/financial-icon-png/finance-a-icons-free-icons-in-google-apps--icon-search-engine--14.png"
+              alt="Card image cap"
+            />
+            <div class="card-body">
+              <h5 class="card-title">Card title</h5>
+              <p class="card-text">
+                Some quick example text to build on the card title and make up
+                the bulk of the card's content.
+              </p>
+              <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+          </div>
+          <!-- placeholder -->
+        </div>
+      </section>
 
       <!-- Hear from our past users. -->
       <section></section>
