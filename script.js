@@ -1,3 +1,4 @@
+// Section 1 & 2: Everything about AAPL.
 // Function: To retrieve stock data from Alpha Vantage API
 async function getHistoricalStockPrices(ticker) {
   let config = {
@@ -48,15 +49,54 @@ let stockChartInstance;
 function renderChart(dates, prices, ticker) {
   const ctx = document.getElementById("stockChart").getContext("2d");
 
-  // Responsive font size based on screen width
-  const responsiveFontSize = window.innerWidth < 992 ? 6 : 14;
-  const responsiveTitleFontSize = window.innerWidth < 992 ? 8 : 16;
+  // Total duration of the animation (in milliseconds)
+  const totalDuration = 2500;
+  const delayBetweenPoints = totalDuration / prices.length;
+
+  // Function to get the previous Y position for smooth animation
+  const previousY = (ctx) =>
+    ctx.index === 0
+      ? ctx.chart.scales.y.getPixelForValue(100)
+      : ctx.chart
+          .getDatasetMeta(ctx.datasetIndex)
+          .data[ctx.index - 1].getProps(["y"], true).y;
+
+  // Define the custom animation for X and Y axes
+  const animation = {
+    x: {
+      type: "number",
+      easing: "linear", // Linear easing for smooth transition
+      duration: delayBetweenPoints, // Duration for each X point
+      from: NaN, // Initially the point is skipped
+      delay(ctx) {
+        if (ctx.type !== "data" || ctx.xStarted) {
+          return 0;
+        }
+        ctx.xStarted = true; // Mark that the X animation has started for this point
+        return ctx.index * delayBetweenPoints; // Delay based on the index of the point
+      },
+    },
+    y: {
+      type: "number",
+      easing: "linear", // Linear easing for smooth transition
+      duration: delayBetweenPoints, // Duration for each Y point
+      from: previousY, // Use the previous Y value to ensure smooth transitions
+      delay(ctx) {
+        if (ctx.type !== "data" || ctx.yStarted) {
+          return 0;
+        }
+        ctx.yStarted = true; // Mark that the Y animation has started for this point
+        return ctx.index * delayBetweenPoints; // Delay based on the index of the point
+      },
+    },
+  };
 
   // If a chart instance already exists, destroy it
   if (stockChartInstance) {
     stockChartInstance.destroy();
   }
 
+  // Create the chart with the progressive animation
   stockChartInstance = new Chart(ctx, {
     type: "line",
     data: {
@@ -65,51 +105,40 @@ function renderChart(dates, prices, ticker) {
         {
           label: `${ticker} Stock Price`,
           data: prices, // Y-axis (prices)
-          borderColor: "white",
-          backgroundColor: "rgba(255, 255, 255, 0.5)",
-          fill: true,
-          tension: 0.3, // Adds a smooth curve to the line
+          borderColor: "white", // Line color
+          backgroundColor: "rgba(255, 255, 255, 0.5)", // Background color for the line
+          fill: false, // Fill under the line
+          tension: 0.3, // Smooth curve for the line
+          radius: 3, // No radius on points
         },
       ],
     },
     options: {
-      responsive: true, // Make the chart responsive
-      maintainAspectRatio: false, // Allows the chart to adjust dimensions
+      responsive: true, // Make the chart responsive to window resizing
+      maintainAspectRatio: false, // Allow chart to adjust its size
       scales: {
         x: {
-          type: "time",
+          type: "time", // X-axis will be a time scale
           time: {
-            unit: "day",
+            unit: "day", // Display data by day
           },
           title: {
             display: true,
             text: "Date",
-            color: "white", // Change x-axis title color to white
-            font: {
-              size: responsiveTitleFontSize, // Responsive font size for title
-            },
+            color: "white", // Change title color to white
           },
           ticks: {
-            color: "white", // Change x-axis tick label color to white
-            font: {
-              size: responsiveFontSize, // Responsive font size for tick labels
-            },
+            color: "white", // Change tick label color to white
           },
         },
         y: {
           title: {
             display: true,
             text: "Price (USD)",
-            color: "white", // Change y-axis title color to white
-            font: {
-              size: responsiveTitleFontSize, // Responsive font size for title
-            },
+            color: "white", // Change title color to white
           },
           ticks: {
-            color: "white", // Change y-axis tick label color to white
-            font: {
-              size: responsiveFontSize, // Responsive font size for tick labels
-            },
+            color: "white", // Change tick label color to white
           },
         },
       },
@@ -118,12 +147,10 @@ function renderChart(dates, prices, ticker) {
           display: true,
           labels: {
             color: "white", // Change legend label color to white
-            font: {
-              size: responsiveFontSize, // Responsive font size for legend labels
-            },
           },
         },
       },
+      animation, // Apply the custom animation
     },
   });
 }
@@ -139,6 +166,8 @@ window.onload = async function () {
     if (data) {
       console.log("Rendering chart with default stock data...");
       renderChart(data.dates, data.prices, stockTicker);
+      // // Fetch and render the latest news related to the stock
+      // getStockNews(stockTicker);
     }
   } catch (error) {
     console.log("Error fetching historical stock data:", error);
@@ -161,10 +190,17 @@ async function handleStockInput() {
     "section-2"
   ).innerText = `Everything about ${stockTicker}.`;
 
+  // Update the section 3 header
+  document.getElementById(
+    "section-3"
+  ).innerText = `Stay Informed: The Latest Developments on ${stockTicker}.`;
+
   try {
     // Fetch the data and then render it on the chart
     let data = await getHistoricalStockPrices(stockTicker);
     renderChart(data.dates, data.prices, stockTicker);
+    // // Fetch and render the latest news related to the stock
+    // getStockNews(stockTicker);
   } catch (error) {
     console.log("Error in rendering chart: ", error);
   }
@@ -180,6 +216,59 @@ stockInput.addEventListener("keydown", (event) => {
   }
 });
 
+// Section 3: Stay Informed: The Latest Developments on AAPL.
+// Function: To retrieve news related to the stock via FinanceBird data sourced from Yahoo Finance
+async function getStockNews(ticker) {
+  let config = {
+    method: "get",
+    maxBodyLength: Infinity,
+    url: `https://financebird.p.rapidapi.com/quote/${ticker}/news?count=3`,
+    headers: {
+      "x-rapidapi-key": API_KEY,
+      "x-rapidapi-host": "financebird.p.rapidapi.com",
+    },
+  };
+
+  try {
+    // Await the axios request and get the response directly
+    const response = await axios.request(config);
+
+    const newsContainer = document.getElementById("news-container");
+
+    // Clear previous news cards before appending new ones
+    newsContainer.innerHTML = "";
+
+    for (let news_num = 0; news_num < response.data.count; news_num++) {
+      const newsTitle = response.data.news[news_num].title;
+      const newsLink = response.data.news[news_num].link;
+      const newsSource = response.data.news[news_num].publisher;
+      // Optional Chaining to avoid errors if thumbnail is not available
+      const newsThumbnail =
+        response.data.news[news_num]?.thumbnail?.resolutions?.[0]?.url ||
+        "images/logo.png";
+
+      // console.log(newsTitle, newsLink, newsThumbnail, newsSource);
+
+      // Create a new card
+      const cardHTML = `
+      <div class="card">
+      <img class="card-img-top" src="${newsThumbnail}" alt="News Thumbnail" />
+      <div class="card-body">
+      <h5 class="card-title">${newsSource}</h5>
+      <p class="card-text">${newsTitle}</p>
+      <a href="${newsLink}" class="btn btn-primary">Read More</a>
+      </div>
+      </div>`;
+
+      // Append the new card to the container
+      newsContainer.insertAdjacentHTML("beforeend", cardHTML);
+    }
+  } catch (error) {
+    console.error("Error fetching news data:", error);
+  }
+}
+
+// Section 4: See how much your investments could have earned till date.
 // Javascript for date picker input
 document.addEventListener("DOMContentLoaded", function () {
   flatpickr("#datepicker", {

@@ -78,6 +78,12 @@ h3 {
   max-width: 30%;
 }
 
+.chart-text p {
+  color: #ffffff;
+  font-family: "Fira Sans", serif;
+  font-size: 1.5vw;
+}
+
 /* Section 3 */
 .white-bg-full-width {
   background-color: #ffffff;
@@ -107,6 +113,18 @@ h3 {
   color: #000b58;
   font-family: "Fira Sans", serif;
   font-size: 1.5vw;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  flex-grow: 1;
+  position: relative;
+}
+
+.card-body a.btn {
+  align-self: flex-start;
 }
 
 /* Section 4 */
@@ -219,6 +237,12 @@ h3 {
     max-width: 100%;
   }
 
+  .chart-text p {
+    color: #ffffff;
+    font-family: "Fira Sans", serif;
+    font-size: 2vw;
+  }
+
   /* Section 3 */
   .section-header-blue h2,
   .section-header-blue h5 {
@@ -264,5 +288,11 @@ h3 {
 
   .stock-text-container {
     padding: 0px 0px;
+  }
+
+  .stock-text-container p {
+    color: #ffffff;
+    font-family: "Fira Sans", serif;
+    font-size: 2vw;
   }
 }
