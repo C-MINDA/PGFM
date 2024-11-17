@@ -23,6 +23,7 @@
   text-decoration: underline;
 }
 
+/* Section 1 */
 h1 {
   color: #000b58;
   font-family: "Fira Sans", serif;
@@ -44,6 +45,7 @@ h3 {
   border-color: #000b58;
 }
 
+/* Section 2 */
 .bg-full-width {
   background-color: #000b58;
   width: 100%;
@@ -76,6 +78,7 @@ h3 {
   max-width: 30%;
 }
 
+/* Section 3 */
 .white-bg-full-width {
   background-color: #ffffff;
   width: 100%;
@@ -95,24 +98,69 @@ h3 {
   font-size: 2vw;
 }
 
-.section-header-blue p {
+.news-container .card {
+  width: 30%;
+  margin: 10px 0px;
+}
+
+.news-container .card .card-text {
   color: #000b58;
   font-family: "Fira Sans", serif;
-  font-size: 1.3vw;
+  font-size: 1.5vw;
 }
 
-.smallest-input {
-  width: 25vw;
-}
-
+/* Section 4 */
 .btn-stockPriceInput,
 .btn-stockPriceInput:focus {
   background-color: #ffffff;
 }
 
-/* #datepicker {
-  width: 300px;
-} */
+.main-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-and-table-container {
+  flex: 0 0 50%;
+  padding-right: 15px;
+}
+
+.table th,
+.table td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.card-text-container {
+  flex: 0 0 50%;
+}
+
+.stock-cards-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 0px 15px;
+}
+
+.stock-cards-container .card {
+  width: 30%;
+}
+
+.stock-cards-container p {
+  color: #000b58;
+  font-family: "Fira Sans", serif;
+  font-size: 1.3vw;
+}
+
+.stock-text-container {
+  padding: 0px 15px;
+}
+
+.stock-text-container p {
+  color: #ffffff;
+  font-family: "Fira Sans", serif;
+  font-size: 1.5vw;
+}
 
 @media screen and (max-width: 992px) {
   .navbar-brand,
@@ -124,6 +172,7 @@ h3 {
     font-size: 16px;
   }
 
+  /* Section 1 */
   h1 {
     color: #000b58;
     font-size: 6vw;
@@ -138,11 +187,7 @@ h3 {
     font-size: 2vw;
   }
 
-  .smaller-input::placeholder {
-    font-size: 2vw;
-    color: gray;
-  }
-
+  /* Section 2 */
   .section-header-white h2,
   .section-header-white p {
     color: #ffffff;
@@ -174,6 +219,7 @@ h3 {
     max-width: 100%;
   }
 
+  /* Section 3 */
   .section-header-blue h2,
   .section-header-blue h5 {
     color: #000b58;
@@ -181,9 +227,42 @@ h3 {
     font-size: 3vw;
   }
 
-  .section-header-blue p {
+  .news-container {
+    justify-content: space-between;
+  }
+
+  .news-container .card .card-text {
+    color: #000b58;
+    font-family: "Fira Sans", serif;
+    font-size: 2vw;
+  }
+
+  /* Section 4 */
+  .form-and-table-container {
+    padding-right: 0px;
+  }
+
+  .table-container .table {
+    font-size: 2.5vw;
+  }
+
+  .stock-cards-container {
+    padding: 0px;
+    justify-content: space-between;
+  }
+
+  .stock-cards-container .card {
+    width: 30%;
+    margin: 10px 0px;
+  }
+
+  .stock-cards-container p {
     color: #000b58;
     font-family: "Fira Sans", serif;
     font-size: 2.5vw;
+  }
+
+  .stock-text-container {
+    padding: 0px 0px;
   }
 }
