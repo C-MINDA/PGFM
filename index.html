@@ -200,10 +200,23 @@
                     placeholder="Enter stock purchase price..."
                   />
                   <input
-                    class="btn btn-stockPriceInput ms-3"
+                    class="btn btn-equal ms-3"
                     type="submit"
                     value="Submit"
-                    id="stockPriceInput-btn"
+                    id="stockDataInput-btn"
+                  />
+                </div>
+                <div class="d-flex mt-3">
+                  <input
+                    class="form-control"
+                    id="stockQtyInput"
+                    placeholder="Enter stock quantity..."
+                  />
+                  <input
+                    class="btn btn-equal ms-3"
+                    type="button"
+                    value="Reset"
+                    id="resetTable-btn"
                   />
                 </div>
               </div>
@@ -217,25 +230,8 @@
                       <th scope="col">Quantity</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <th scope="row">1</th>
-                      <td>1/1/2024</td>
-                      <td>$10</td>
-                      <td>100</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">2</th>
-                      <td>13/3/2024</td>
-                      <td>$20</td>
-                      <td>200</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">3</th>
-                      <td>31/7/2024</td>
-                      <td>$30</td>
-                      <td>150</td>
-                    </tr>
+                  <tbody id="stockTableBody">
+                    <!-- Rows will be added dynamically here -->
                   </tbody>
                 </table>
               </div>

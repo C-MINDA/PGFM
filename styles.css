@@ -128,8 +128,9 @@ h3 {
 }
 
 /* Section 4 */
-.btn-stockPriceInput,
-.btn-stockPriceInput:focus {
+.btn-equal,
+.btn-equal:focus {
+  width: 100px;
   background-color: #ffffff;
 }
 

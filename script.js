@@ -44,6 +44,32 @@ async function getHistoricalStockPrices(ticker) {
 
 // Function: To fetch predicted stock prices for next day and next week
 async function getPredictedStockPrices(ticker) {
+  const CACHE_EXPIRY_HOURS = 24; // Expiry time in hours
+  const cachedData = localStorage.getItem("predictedStockPrices");
+
+  if (cachedData) {
+    const parsedData = JSON.parse(cachedData);
+
+    // Check if the ticker matches and the data is still valid
+    if (parsedData.ticker === ticker) {
+      const now = new Date();
+      const cachedTimestamp = new Date(parsedData.timestamp);
+
+      // Calculate time difference in hours
+      const hoursSinceCache = (now - cachedTimestamp) / (1000 * 60 * 60);
+
+      if (hoursSinceCache < CACHE_EXPIRY_HOURS) {
+        console.log("Using cached data for", ticker);
+        return parsedData.data;
+      } else {
+        // Data expired: Remove it from local storage
+        console.log("Cache expired. Clearing cached data for", ticker);
+        localStorage.removeItem("predictedStockPrices");
+      }
+    }
+  }
+
+  // If no valid cached data, make API calls
   // let nextDayConfig = {
   //   method: "get",
   //   maxBodyLength: Infinity,
@@ -65,64 +91,49 @@ async function getPredictedStockPrices(ticker) {
   // };
 
   try {
-    // Make the API requests in parallel
     const [nextDayResponse, nextWeekResponse] = await Promise.all([
       axios.request(nextDayConfig),
       axios.request(nextWeekConfig),
     ]);
 
-    // Extract prices from the responses
     const nextDayPredPrice = nextDayResponse.data.predicted_price;
     const nextWeekPredPrice = nextWeekResponse.data.predicted_price;
 
-    // Get the current date
     const today = new Date();
 
-    // Compute the next day's date
+    // Compute dates
     let nextDay = new Date(today);
     nextDay.setDate(today.getDate() + 1);
+    if (nextDay.getDay() === 6) nextDay.setDate(nextDay.getDate() + 2); // Adjust for weekend
+    if (nextDay.getDay() === 0) nextDay.setDate(nextDay.getDate() + 1);
 
-    // Adjust if the next day is a weekend
-    const nextDayOfWeek = nextDay.getDay();
-    if (nextDayOfWeek === 6) {
-      // If Saturday, set to Monday (+2 days)
-      nextDay.setDate(nextDay.getDate() + 2);
-    } else if (nextDayOfWeek === 0) {
-      // If Sunday, set to Monday (+1 day)
-      nextDay.setDate(nextDay.getDate() + 1);
-    }
-
-    // Compute the date for the next week
     let nextWeek = new Date(today);
     nextWeek.setDate(today.getDate() + 7);
+    if (nextWeek.getDay() === 6) nextWeek.setDate(nextWeek.getDate() + 2); // Adjust for weekend
+    if (nextWeek.getDay() === 0) nextWeek.setDate(nextWeek.getDate() + 1);
 
-    // Adjust if next week date falls on a weekend
-    const nextWeekDayOfWeek = nextWeek.getDay();
-    if (nextWeekDayOfWeek === 6) {
-      // If Saturday, set to Monday (+2 days)
-      nextWeek.setDate(nextWeek.getDate() + 2);
-    } else if (nextWeekDayOfWeek === 0) {
-      // If Sunday, set to Monday (+1 day)
-      nextWeek.setDate(nextWeek.getDate() + 1);
-    }
-
-    // Format the dates as YYYY-MM-DD
     const formattedNextDay = nextDay.toISOString().split("T")[0];
     const formattedNextWeek = nextWeek.toISOString().split("T")[0];
 
-    console.log(
-      [formattedNextDay, formattedNextWeek],
-      [nextDayPredPrice, nextWeekPredPrice]
-    );
-
-    // Return the dates and prices arrays
-    return {
+    const dataToCache = {
       dates: [formattedNextDay, formattedNextWeek],
       prices: [nextDayPredPrice, nextWeekPredPrice],
     };
+
+    // Save to localStorage
+    localStorage.setItem(
+      "predictedStockPrices",
+      JSON.stringify({
+        ticker,
+        timestamp: new Date().toISOString(),
+        data: dataToCache,
+      })
+    );
+
+    return dataToCache;
   } catch (error) {
     console.error("Error fetching predicted stock data:", error);
-    return { dates: [], prices: [] }; // Return empty arrays in case of error
+    return { dates: [], prices: [] };
   }
 }
 
@@ -388,3 +399,79 @@ document.addEventListener("DOMContentLoaded", function () {
     defaultDate: "today",
   });
 });
+
+// JavaScript to handle form submission and dynamic table update
+document
+  .getElementById("stockDataInput-btn")
+  .addEventListener("click", function (event) {
+    event.preventDefault(); // Prevent form from reloading the page
+
+    // Get input values
+    const date = document.getElementById("datepicker").value;
+    const stockPrice = document.getElementById("stockPriceInput").value;
+    const quantity = document.getElementById("stockQtyInput").value;
+
+    // Validate inputs
+    if (!date || !stockPrice || !quantity) {
+      alert("Please fill out all fields.");
+      return;
+    }
+
+    // Check if stock price and quantity are numbers
+    if (isNaN(stockPrice) || isNaN(quantity)) {
+      alert("Please enter valid numeric values for stock price and quantity.");
+      return;
+    }
+
+    // Parse the numbers
+    const parsedStockPrice = parseFloat(stockPrice);
+    const parsedQuantity = parseInt(quantity, 10);
+
+    // Check if parsing was successful (in case of empty strings or invalid formats)
+    if (isNaN(parsedStockPrice) || isNaN(parsedQuantity)) {
+      alert("Please enter valid numeric values for stock price and quantity.");
+      return;
+    }
+
+    // Get the table body
+    const tableBody = document.getElementById("stockTableBody");
+
+    // Create a new row
+    const newRow = document.createElement("tr");
+
+    // Get the new row index
+    const rowIndex = tableBody.rows.length + 1;
+
+    // Add cells to the row
+    newRow.innerHTML = `
+      <th scope="row">${rowIndex}</th>
+      <td>${date}</td>
+      <td>$${parsedStockPrice.toFixed(2)}</td>
+      <td>${parsedQuantity}</td>
+    `;
+
+    // Append the new row to the table body
+    tableBody.appendChild(newRow);
+
+    // Clear input fields after submission
+    document.getElementById("datepicker").value = "";
+    document.getElementById("stockPriceInput").value = "";
+    document.getElementById("stockQtyInput").value = "";
+  });
+
+// Handle Reset Button Click
+document
+  .getElementById("resetTable-btn")
+  .addEventListener("click", function () {
+    const tableBody = document.getElementById("stockTableBody");
+
+    // Clear all rows from the table body
+    while (tableBody.firstChild) {
+      tableBody.removeChild(tableBody.firstChild);
+    }
+
+    // Optional: Clear input fields
+    document.getElementById("datepicker").value = "";
+    document.getElementById("stockPriceInput").value = "";
+    document.getElementById("stockQtyInput").value = "";
+  });
