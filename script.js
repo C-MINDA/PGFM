@@ -32,20 +32,29 @@ async function getHistoricalStockPrices(ticker) {
     dates.reverse();
     prices.reverse();
 
-    return { dates, prices };
+    return {
+      dates,
+      prices,
+    };
 
     //   console.log(dates);
     //   console.log(prices);
   } catch (error) {
     console.error("Error fetching stock data:", error);
-    return { dates: [], prices: [] }; // Return empty arrays in case of error
+    return {
+      dates: [],
+      prices: [],
+    }; // Return empty arrays in case of error
   }
 }
 
 // Function: To fetch predicted stock prices for next day and next week
 async function getPredictedStockPrices(ticker) {
   const CACHE_EXPIRY_HOURS = 24; // Expiry time in hours
-  const cachedData = localStorage.getItem("predictedStockPrices");
+  const STORAGE_KEY = `predictedStockPrices_${ticker}`; // Use ticker-specific storage key
+
+  // Check if data is in local storage and still valid
+  const cachedData = localStorage.getItem(STORAGE_KEY);
 
   if (cachedData) {
     const parsedData = JSON.parse(cachedData);
@@ -59,36 +68,38 @@ async function getPredictedStockPrices(ticker) {
       const hoursSinceCache = (now - cachedTimestamp) / (1000 * 60 * 60);
 
       if (hoursSinceCache < CACHE_EXPIRY_HOURS) {
-        console.log("Using cached data for", ticker);
-        return parsedData.data;
+        console.log(`Using cached data for ${ticker} predicted stock prices.`);
+        return parsedData.data; // Return cached data if still valid
       } else {
-        // Data expired: Remove it from local storage
-        console.log("Cache expired. Clearing cached data for", ticker);
-        localStorage.removeItem("predictedStockPrices");
+        // Cache expired: Remove it from local storage
+        console.log(
+          `Cache expired. Clearing cached data for ${ticker} predicted stock prices.`
+        );
+        localStorage.removeItem(STORAGE_KEY); // Clear expired cache for this ticker
       }
     }
   }
 
   // If no valid cached data, make API calls
-  // let nextDayConfig = {
-  //   method: "get",
-  //   maxBodyLength: Infinity,
-  //   url: `https://ai-stock-prediction-recommendations.p.rapidapi.com/next-day-prediction?ticker=${ticker}`,
-  //   headers: {
-  //     "x-rapidapi-key": API_KEY,
-  //     "x-rapidapi-host": "ai-stock-prediction-recommendations.p.rapidapi.com",
-  //   },
-  // };
+  let nextDayConfig = {
+    method: "get",
+    maxBodyLength: Infinity,
+    url: `https://ai-stock-prediction-recommendations.p.rapidapi.com/next-day-prediction?ticker=${ticker}`,
+    headers: {
+      "x-rapidapi-key": API_KEY,
+      "x-rapidapi-host": "ai-stock-prediction-recommendations.p.rapidapi.com",
+    },
+  };
 
-  // let nextWeekConfig = {
-  //   method: "get",
-  //   maxBodyLength: Infinity,
-  //   url: `https://ai-stock-prediction-recommendations.p.rapidapi.com/next-week-prediction?ticker=${ticker}`,
-  //   headers: {
-  //     "x-rapidapi-key": API_KEY,
-  //     "x-rapidapi-host": "ai-stock-prediction-recommendations.p.rapidapi.com",
-  //   },
-  // };
+  let nextWeekConfig = {
+    method: "get",
+    maxBodyLength: Infinity,
+    url: `https://ai-stock-prediction-recommendations.p.rapidapi.com/next-week-prediction?ticker=${ticker}`,
+    headers: {
+      "x-rapidapi-key": API_KEY,
+      "x-rapidapi-host": "ai-stock-prediction-recommendations.p.rapidapi.com",
+    },
+  };
 
   try {
     const [nextDayResponse, nextWeekResponse] = await Promise.all([
@@ -101,7 +112,7 @@ async function getPredictedStockPrices(ticker) {
 
     const today = new Date();
 
-    // Compute dates
+    // Compute next day and next week dates
     let nextDay = new Date(today);
     nextDay.setDate(today.getDate() + 1);
     if (nextDay.getDay() === 6) nextDay.setDate(nextDay.getDate() + 2); // Adjust for weekend
@@ -120,20 +131,23 @@ async function getPredictedStockPrices(ticker) {
       prices: [nextDayPredPrice, nextWeekPredPrice],
     };
 
-    // Save to localStorage
+    // Save to localStorage using a dynamic key based on ticker
     localStorage.setItem(
-      "predictedStockPrices",
+      STORAGE_KEY, // Dynamic storage key per ticker
       JSON.stringify({
-        ticker,
-        timestamp: new Date().toISOString(),
-        data: dataToCache,
+        ticker, // Store the ticker
+        timestamp: new Date().toISOString(), // Current timestamp
+        data: dataToCache, // Store the prediction data
       })
     );
 
-    return dataToCache;
+    return dataToCache; // Return the newly fetched data
   } catch (error) {
     console.error("Error fetching predicted stock data:", error);
-    return { dates: [], prices: [] };
+    return {
+      dates: [],
+      prices: [],
+    };
   }
 }
 
@@ -154,7 +168,10 @@ function renderChart(dates, prices, ticker, predictedDates, predictedPrices) {
       datasets: [
         {
           label: `${ticker} Stock Price`,
-          data: dates.map((date, index) => ({ x: date, y: prices[index] })), // First dataset
+          data: dates.map((date, index) => ({
+            x: date,
+            y: prices[index],
+          })), // First dataset
           borderColor: "white",
           backgroundColor: "rgba(255, 255, 255, 0.5)",
           fill: false,
@@ -216,6 +233,77 @@ function renderChart(dates, prices, ticker, predictedDates, predictedPrices) {
   });
 }
 
+// Function: To retrieve stock recommendation from API
+async function getStockRecommendation(ticker) {
+  const CACHE_EXPIRY_HOURS = 24; // Cache expiry time in hours
+  const STORAGE_KEY = `stockDataRecommendation_${ticker}`; // Use a dynamic key based on the ticker
+
+  // Check if data is in local storage and still valid
+  const cachedData = localStorage.getItem(STORAGE_KEY);
+
+  if (cachedData) {
+    const parsedData = JSON.parse(cachedData);
+
+    if (parsedData.ticker === ticker) {
+      const now = new Date();
+      const cachedTimestamp = new Date(parsedData.timestamp);
+      const hoursSinceCache = (now - cachedTimestamp) / (1000 * 60 * 60); // Calculate the hours since cache was last updated
+
+      if (hoursSinceCache < CACHE_EXPIRY_HOURS) {
+        console.log(`Using cached data for ${ticker} stock recommendation.`);
+        return parsedData.data; // Return cached data if still valid
+      } else {
+        // Cache expired: Remove the cached entry
+        console.log(
+          `Cached data for ${ticker} is expired. Clearing from local storage.`
+        );
+        localStorage.removeItem(STORAGE_KEY); // Clear expired cache for this ticker
+      }
+    }
+  }
+
+  // If no valid cached data, fetch from the API
+  let config = {
+    method: "get",
+    maxBodyLength: Infinity,
+    url: `https://ai-stock-prediction-recommendations.p.rapidapi.com/stock-recommendation?ticker=${ticker}`,
+    headers: {
+      "x-rapidapi-key": API_KEY,
+      "x-rapidapi-host": "ai-stock-prediction-recommendations.p.rapidapi.com",
+    },
+  };
+
+  try {
+    // Await the axios request and get the response directly
+    const response = await axios.request(config);
+    const confidenceScore = response.data["confidence_score"];
+    const recommendation = response.data["recommendation"];
+
+    const result = {
+      confidenceScore,
+      recommendation,
+    };
+
+    // Store the result in local storage with a timestamp
+    localStorage.setItem(
+      STORAGE_KEY, // Use the dynamic storage key based on ticker
+      JSON.stringify({
+        ticker, // Store the ticker along with the data for future validation
+        timestamp: new Date().toISOString(), // Current time as the timestamp
+        data: result, // Store the data
+      })
+    );
+
+    return result; // Return the result fetched from the API
+  } catch (error) {
+    console.error("Error fetching stock data recommendation:", error);
+    return {
+      confidenceScore: null,
+      recommendation: null,
+    };
+  }
+}
+
 // Render the default chart as soon as the page loads
 window.onload = async function () {
   // Set default value for stockInput when the page loads
@@ -225,6 +313,7 @@ window.onload = async function () {
   try {
     let data = await getHistoricalStockPrices(stockTicker);
     let predData = await getPredictedStockPrices(stockTicker);
+    let stockRecommendation = await getStockRecommendation(stockTicker);
     if (data) {
       console.log("Rendering chart with default stock data...");
       renderChart(
@@ -252,7 +341,11 @@ window.onload = async function () {
         } is $${predData.prices[0].toFixed(2)} and on ${
           predData.dates[1]
         } is $${predData.prices[1].toFixed(2)}. <br><br> 
-        The prediction has a confidence level of 0.95, and the recommendation is to <strong>'buy'</strong> the stock.`;
+        The prediction has a confidence level of ${
+          stockRecommendation.confidenceScore
+        }, and the recommendation is to <strong>'${
+          stockRecommendation.recommendation
+        }'</strong> the stock.`;
       } else {
         document.getElementById(
           "stock-desc"
@@ -263,7 +356,7 @@ window.onload = async function () {
       // getStockNews(stockTicker);
     }
   } catch (error) {
-    console.log("Error fetching historical stock data:", error);
+    console.log("Error:", error);
   }
 };
 
@@ -292,6 +385,7 @@ async function handleStockInput() {
     // Fetch the data and then render it on the chart
     let data = await getHistoricalStockPrices(stockTicker);
     let predData = await getPredictedStockPrices(stockTicker);
+    let stockRecommendation = await getStockRecommendation(stockTicker);
     renderChart(
       data.dates,
       data.prices,
@@ -316,16 +410,21 @@ async function handleStockInput() {
         predData.dates[0]
       } is $${predData.prices[0].toFixed(2)} and on ${
         predData.dates[1]
-      } is $${predData.prices[1].toFixed(2)}. <br><br>
-      The prediction has a confidence level of 0.95, and the recommendation is to <strong>'buy'</strong> the stock.`;
+      } is $${predData.prices[1].toFixed(2)}. <br><br> 
+      The prediction has a confidence level of ${
+        stockRecommendation.confidenceScore
+      }, and the recommendation is to <strong>'${
+        stockRecommendation.recommendation
+      }'</strong> the stock.`;
     } else {
       document.getElementById(
         "stock-desc"
-      ).innerHTML = `This chart shows the daily closing price for ${stockTicker} stock over the latest 100 data points. The prediction data is unavailable at the moment.`;
+      ).innerHTML = `This chart shows the daily closing price for ${stockTicker} stock over the latest 100 data points. <br><br>
+      The prediction data is unavailable at the moment.`;
     }
     // getStockNews(stockTicker);
   } catch (error) {
-    console.log("Error in rendering chart: ", error);
+    console.log("Error: ", error);
   }
 }
 
@@ -475,3 +574,40 @@ document
     document.getElementById("stockPriceInput").value = "";
     document.getElementById("stockQtyInput").value = "";
   });
+
+// Add Cards from Javascript
+function populateStockCards(tickerPrice) {
+  const container = document.getElementById("stockCardsContainer");
+  container.innerHTML = "";
+
+  // Card 1 - AAPL Stock Card
+  const card1 = document.createElement("div");
+  card1.classList.add("card", "stock-card");
+  card1.innerHTML = `
+      <div class="card-body">
+        <h6 class="card-title">Today's Stock Price</h6>
+        <h3 class="card-text"><strong>$ ${tickerPrice}</strong></h3>
+    `;
+  container.appendChild(card1);
+
+  // Card 2 - GOOG Stock Card
+  const card2 = document.createElement("div");
+  card2.classList.add("card", "stock-card");
+  card2.innerHTML = `
+      <div class="card-body">
+        <h6 class="card-title">Your Average <br> Stock Price</h6>
+        <h3 class="card-text"><strong>$ ${tickerPrice}</strong></h3>
+    `;
+  container.appendChild(card2);
+
+  // Card 3 - TSLA Stock Card
+  const card3 = document.createElement("div");
+  card3.classList.add("card", "stock-card");
+  card3.innerHTML = `
+      <div class="card-body">
+        <h6 class="card-title">Your Total <br> Stock Returns</h6>
+        <h3 class="card-text"><strong>$ ${tickerPrice}</strong></h3>
+    `;
+  container.appendChild(card3);
+}
+populateStockCards(130);

@@ -140,7 +140,7 @@ h3 {
 }
 
 .form-and-table-container {
-  flex: 0 0 50%;
+  flex: 0 0 40%;
   padding-right: 15px;
 }
 
@@ -151,7 +151,7 @@ h3 {
 }
 
 .card-text-container {
-  flex: 0 0 50%;
+  flex: 0 0 60%;
 }
 
 .stock-cards-container {
@@ -179,6 +179,11 @@ h3 {
   color: #ffffff;
   font-family: "Fira Sans", serif;
   font-size: 1.5vw;
+}
+
+.card-body {
+  justify-content: space-between;
+  text-align: center;
 }
 
 @media screen and (max-width: 992px) {
