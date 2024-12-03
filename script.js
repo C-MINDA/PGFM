@@ -354,6 +354,10 @@ window.onload = async function () {
       }
 
       // getStockNews(stockTicker);
+
+      // Populate stock cards for Section 4
+      let todayStockPrice = data.prices[data.prices.length - 1];
+      populateStockCards(todayStockPrice);
     }
   } catch (error) {
     console.log("Error:", error);
@@ -380,6 +384,11 @@ async function handleStockInput() {
   document.getElementById(
     "section-3"
   ).innerText = `Stay Informed: The Latest Developments on ${stockTicker}.`;
+
+  // Update the section 4 header
+  document.getElementById(
+    "section-4"
+  ).innerText = `See how much your investments could have earned till date for ${stockTicker}.`;
 
   try {
     // Fetch the data and then render it on the chart
@@ -423,6 +432,16 @@ async function handleStockInput() {
       The prediction data is unavailable at the moment.`;
     }
     // getStockNews(stockTicker);
+
+    // Populate stock cards for Section 4
+    let todayStockPrice = data.prices[data.prices.length - 1];
+    populateStockCards(todayStockPrice);
+
+    // Clear old simulation, if any
+    const tableBody = document.getElementById("stockTableBody");
+    while (tableBody.firstChild) {
+      tableBody.removeChild(tableBody.firstChild);
+    }
   } catch (error) {
     console.log("Error: ", error);
   }
@@ -543,10 +562,10 @@ document
 
     // Add cells to the row
     newRow.innerHTML = `
-      <th scope="row">${rowIndex}</th>
-      <td>${date}</td>
-      <td>$${parsedStockPrice.toFixed(2)}</td>
-      <td>${parsedQuantity}</td>
+      <th scope="row" class="row-index">${rowIndex}</th>
+      <td class="date-cell">${date}</td>
+      <td class="price-cell">$${parsedStockPrice.toFixed(2)}</td>
+      <td class="quantity-cell">${parsedQuantity}</td>
     `;
 
     // Append the new row to the table body
@@ -556,6 +575,13 @@ document
     document.getElementById("datepicker").value = "";
     document.getElementById("stockPriceInput").value = "";
     document.getElementById("stockQtyInput").value = "";
+
+    const { AvgStockPrice, totalStockReturn } = calculateStockStats();
+    populateStockCards(
+      document.getElementById("today-stock-price").textContent.replace("$", ""),
+      AvgStockPrice,
+      totalStockReturn
+    );
   });
 
 // Handle Reset Button Click
@@ -576,38 +602,84 @@ document
   });
 
 // Add Cards from Javascript
-function populateStockCards(tickerPrice) {
+async function populateStockCards(
+  todayStockPrice,
+  yourAvgStockPrice = 0,
+  yourTotalStockReturn = 0
+) {
   const container = document.getElementById("stockCardsContainer");
   container.innerHTML = "";
 
-  // Card 1 - AAPL Stock Card
+  // Card 1
   const card1 = document.createElement("div");
   card1.classList.add("card", "stock-card");
   card1.innerHTML = `
       <div class="card-body">
         <h6 class="card-title">Today's Stock Price</h6>
-        <h3 class="card-text"><strong>$ ${tickerPrice}</strong></h3>
+        <h3 class="card-text" id="today-stock-price"><strong>$ ${todayStockPrice}</strong></h3>
     `;
   container.appendChild(card1);
 
-  // Card 2 - GOOG Stock Card
+  // Card 2
   const card2 = document.createElement("div");
   card2.classList.add("card", "stock-card");
   card2.innerHTML = `
       <div class="card-body">
         <h6 class="card-title">Your Average <br> Stock Price</h6>
-        <h3 class="card-text"><strong>$ ${tickerPrice}</strong></h3>
+        <h3 class="card-text"><strong>$ ${yourAvgStockPrice}</strong></h3>
     `;
   container.appendChild(card2);
 
-  // Card 3 - TSLA Stock Card
+  // Card 3
   const card3 = document.createElement("div");
   card3.classList.add("card", "stock-card");
   card3.innerHTML = `
       <div class="card-body">
         <h6 class="card-title">Your Total <br> Stock Returns</h6>
-        <h3 class="card-text"><strong>$ ${tickerPrice}</strong></h3>
+        <h3 class="card-text"><strong>$ ${yourTotalStockReturn}</strong></h3>
     `;
   container.appendChild(card3);
 }
-populateStockCards(130);
+
+function calculateStockStats() {
+  // Get price and quantity cells
+  const priceCells = document.querySelectorAll(".price-cell");
+  const userPrices = Array.from(priceCells).map((cell) => cell.textContent);
+
+  const qtyCells = document.querySelectorAll(".quantity-cell");
+  const userQuantities = Array.from(qtyCells).map((cell) =>
+    parseInt(cell.textContent)
+  );
+
+  // Calculate total quantity
+  const totalQty = userQuantities.reduce(
+    (total, current) => total + current,
+    0
+  );
+
+  // Calculate total investment
+  const totalInvestment = userPrices.reduce((total, current, index) => {
+    const price = parseFloat(current.replace("$", ""));
+    return total + price * userQuantities[index];
+  }, 0);
+
+  // Calculate average stock price
+  let AvgStockPrice = (totalInvestment / totalQty).toFixed(2);
+
+  // Get today's stock price and calculate market value
+  let marketValue = (
+    totalQty *
+    parseFloat(
+      document
+        .getElementById("today-stock-price")
+        .textContent.replace("$", "")
+        .trim()
+    )
+  ).toFixed(2);
+
+  // Calculate total stock return
+  let totalStockReturn = (marketValue - totalInvestment).toFixed(2);
+
+  // Return both AvgStockPrice and totalStockReturn
+  return { AvgStockPrice, totalStockReturn };
+}
