@@ -20,7 +20,7 @@ This project offers an AI-powered platform for stock market analysis and educati
 
 - **AI-Driven Stock Predictions**: Forecasts based on historical data and AI algorithms.
 - **Historical Data & Chart Visualization**: Interactive charts displaying past stock performance.
-- **News Summaries**: AI-powered summaries of related financial news articles.
+- **Stock-Related News**: Provide latest stock related news articles.
 - **Investment Simulations**: Simulate potential earnings based on user input data.
 
 ## Technologies Used
@@ -28,3 +28,5 @@ This project offers an AI-powered platform for stock market analysis and educati
 - HTML
 - CSS
 - JavaScript
+
+Link: https://c-minda.github.io/PGFM-Stocktastic/
