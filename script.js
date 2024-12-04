@@ -377,7 +377,7 @@ window.onload = async function () {
         The prediction data is unavailable at the moment.`;
       }
 
-      // getStockNews(stockTicker);
+      getStockNews(stockTicker);
 
       // Populate stock cards for Section 4
       let todayStockPrice = data.prices[data.prices.length - 1];
@@ -455,7 +455,7 @@ async function handleStockInput() {
       ).innerHTML = `This chart shows the daily closing price for ${stockTicker} stock over the latest 100 data points. <br><br>
       The prediction data is unavailable at the moment.`;
     }
-    // getStockNews(stockTicker);
+    getStockNews(stockTicker);
 
     // Populate stock cards for Section 4
     let todayStockPrice = data.prices[data.prices.length - 1];
