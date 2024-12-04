@@ -23,6 +23,7 @@
   text-decoration: underline;
 }
 
+/* Section 1 */
 h1 {
   color: #000b58;
   font-family: "Fira Sans", serif;
@@ -44,6 +45,7 @@ h3 {
   border-color: #000b58;
 }
 
+/* Section 2 */
 .bg-full-width {
   background-color: #000b58;
   width: 100%;
@@ -60,19 +62,129 @@ h3 {
 .chart-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 
 .chart {
   width: 60vw;
-  height: 35vh;
+  height: 30vw;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .chart-text {
   margin-left: 30px;
-  /* max-width: 30%; */
+  max-width: 30%;
+}
+
+.chart-text p {
+  color: #ffffff;
+  font-family: "Fira Sans", serif;
+  font-size: 1.5vw;
+}
+
+/* Section 3 */
+.white-bg-full-width {
+  background-color: #ffffff;
+  width: 100%;
+  padding: 20px 25px;
+}
+
+.news-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.section-header-blue h2,
+.section-header-blue h5 {
+  color: #000b58;
+  font-family: "Fira Sans", serif;
+  font-size: 2vw;
+}
+
+.news-container .card {
+  width: 30%;
+  margin: 10px 0px;
+}
+
+.news-container .card .card-text {
+  color: #000b58;
+  font-family: "Fira Sans", serif;
+  font-size: 1.5vw;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  flex-grow: 1;
+  position: relative;
+}
+
+.card-body a.btn {
+  align-self: flex-start;
+}
+
+/* Section 4 */
+.btn-equal,
+.btn-equal:focus {
+  width: 100px;
+  background-color: #ffffff;
+}
+
+.main-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.form-and-table-container {
+  flex: 0 0 40%;
+  padding-right: 15px;
+}
+
+.table th,
+.table td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.card-text-container {
+  flex: 0 0 60%;
+}
+
+.stock-cards-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 0px 15px;
+}
+
+.stock-cards-container .card {
+  width: 30%;
+}
+
+.stock-text-container {
+  padding: 0px 15px;
+}
+
+.stock-text-container p {
+  color: #ffffff;
+  font-family: "Fira Sans", serif;
+  font-size: 1.5vw;
+}
+
+.card-body {
+  justify-content: space-between;
+  text-align: center;
+}
+
+.footer-container,
+.footer-container .nav-link {
+  color: #000b58;
+  font-family: "Fira Sans", serif;
+  font-size: 1.5vw;
 }
 
 @media screen and (max-width: 992px) {
@@ -85,6 +197,7 @@ h3 {
     font-size: 16px;
   }
 
+  /* Section 1 */
   h1 {
     color: #000b58;
     font-size: 6vw;
@@ -95,20 +208,103 @@ h3 {
     font-size: 3.5vw;
   }
 
+  .btn {
+    font-size: 2vw;
+  }
+
+  /* Section 2 */
+  .section-header-white h2,
+  .section-header-white p {
+    color: #ffffff;
+    font-family: "Fira Sans", serif;
+    font-size: 3vw;
+  }
+
   .chart-container {
     flex-direction: column;
   }
 
   .chart {
-    width: 90vw;
-    height: 25vh;
+    width: 80vw;
+    height: 50vw;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
   .chart-text {
-    /* margin-top: 20px; */
+    margin-top: 20px;
     margin-left: 0px;
+    max-width: 100%;
+  }
+
+  .chart-text {
+    margin-top: 20px;
+    margin-left: 0px;
+    max-width: 100%;
+  }
+
+  .chart-text p {
+    color: #ffffff;
+    font-family: "Fira Sans", serif;
+    font-size: 2vw;
+  }
+
+  /* Section 3 */
+  .section-header-blue h2,
+  .section-header-blue h5 {
+    color: #000b58;
+    font-family: "Fira Sans", serif;
+    font-size: 3vw;
+  }
+
+  .news-container {
+    justify-content: space-between;
+  }
+
+  .news-container .card .card-text {
+    color: #000b58;
+    font-family: "Fira Sans", serif;
+    font-size: 2vw;
+  }
+
+  /* Section 4 */
+  .form-and-table-container {
+    padding-right: 0px;
+  }
+
+  .table-container .table {
+    font-size: 2.5vw;
+  }
+
+  .stock-cards-container {
+    padding: 0px;
+    justify-content: space-between;
+  }
+
+  .stock-cards-container .card {
+    width: 30%;
+    margin: 10px 0px;
+  }
+
+  .card-body h6 {
+    font-size: 2.5vw;
+  }
+
+  .stock-text-container {
+    padding: 0px 0px;
+  }
+
+  .stock-text-container p {
+    color: #ffffff;
+    font-family: "Fira Sans", serif;
+    font-size: 2vw;
+  }
+
+  .footer-container,
+  .footer-container .nav-link {
+    color: #000b58;
+    font-family: "Fira Sans", serif;
+    font-size: 2.5vw;
   }
 }
