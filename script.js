@@ -466,6 +466,15 @@ async function handleStockInput() {
     while (tableBody.firstChild) {
       tableBody.removeChild(tableBody.firstChild);
     }
+
+    // Revert simulation-stock-text to default text
+    document.getElementById("simulation-stock-text").innerHTML = `
+      Use the form to simulate your stock purchases. <br><br>
+      Enter the date, stock price, and quantity you want to buy, 
+      and we’ll calculate your potential earnings based on the stock’s current price. <br><br>
+      This is a beginner-friendly tool designed to help you understand how stock 
+      investments work and estimate potential returns through simulation.
+    `;
   } catch (error) {
     console.log("Error: ", error);
   }
