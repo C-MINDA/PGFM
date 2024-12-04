@@ -1,3 +1,27 @@
+// Get RapidAPI Key from the RESTDB
+async function getAPIKey() {
+  let config = {
+    method: "get",
+    maxBodyLength: Infinity,
+    url: "https://stocktastic-1aee.restdb.io/rest/rapidapi",
+    headers: {
+      "content-type": "application/json",
+      "x-apikey": "674fdeb11574351ab3636807",
+      "cache-control": "no-cache",
+    },
+  };
+
+  try {
+    // Await the axios request and get the response directly
+    const response = await axios.request(config);
+    const apiKey = response.data[0].apikey;
+
+    return apiKey;
+  } catch (error) {
+    console.error("Error fetching API KEY:", error);
+  }
+}
+
 // Section 1 & 2: Everything about AAPL.
 // Function: To retrieve stock data from Alpha Vantage API
 async function getHistoricalStockPrices(ticker) {
@@ -6,7 +30,7 @@ async function getHistoricalStockPrices(ticker) {
     maxBodyLength: Infinity,
     url: `https://alpha-vantage.p.rapidapi.com/query?function=TIME_SERIES_DAILY&symbol=${ticker}&outputsize=compact&datatype=json`,
     headers: {
-      "x-rapidapi-key": API_KEY,
+      "x-rapidapi-key": await getAPIKey(),
       "x-rapidapi-host": "alpha-vantage.p.rapidapi.com",
     },
   };
@@ -86,7 +110,7 @@ async function getPredictedStockPrices(ticker) {
     maxBodyLength: Infinity,
     url: `https://ai-stock-prediction-recommendations.p.rapidapi.com/next-day-prediction?ticker=${ticker}`,
     headers: {
-      "x-rapidapi-key": API_KEY,
+      "x-rapidapi-key": await getAPIKey(),
       "x-rapidapi-host": "ai-stock-prediction-recommendations.p.rapidapi.com",
     },
   };
@@ -96,7 +120,7 @@ async function getPredictedStockPrices(ticker) {
     maxBodyLength: Infinity,
     url: `https://ai-stock-prediction-recommendations.p.rapidapi.com/next-week-prediction?ticker=${ticker}`,
     headers: {
-      "x-rapidapi-key": API_KEY,
+      "x-rapidapi-key": await getAPIKey(),
       "x-rapidapi-host": "ai-stock-prediction-recommendations.p.rapidapi.com",
     },
   };
@@ -268,7 +292,7 @@ async function getStockRecommendation(ticker) {
     maxBodyLength: Infinity,
     url: `https://ai-stock-prediction-recommendations.p.rapidapi.com/stock-recommendation?ticker=${ticker}`,
     headers: {
-      "x-rapidapi-key": API_KEY,
+      "x-rapidapi-key": await getAPIKey(),
       "x-rapidapi-host": "ai-stock-prediction-recommendations.p.rapidapi.com",
     },
   };
@@ -465,7 +489,7 @@ async function getStockNews(ticker) {
     maxBodyLength: Infinity,
     url: `https://financebird.p.rapidapi.com/quote/${ticker}/news?count=3`,
     headers: {
-      "x-rapidapi-key": API_KEY,
+      "x-rapidapi-key": await getAPIKey(),
       "x-rapidapi-host": "financebird.p.rapidapi.com",
     },
   };
