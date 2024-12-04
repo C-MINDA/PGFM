@@ -578,10 +578,17 @@ document
 
     const { AvgStockPrice, totalStockReturn } = calculateStockStats();
     populateStockCards(
-      document.getElementById("today-stock-price").textContent.replace("$", ""),
+      parseFloat(
+        document
+          .getElementById("today-stock-price")
+          .textContent.replace("$", "")
+      ),
       AvgStockPrice,
       totalStockReturn
     );
+
+    // Populate stock simulation description for Section 4
+    populateDynamicStockText(AvgStockPrice, totalStockReturn);
   });
 
 // Handle Reset Button Click
@@ -599,6 +606,19 @@ document
     document.getElementById("datepicker").value = "";
     document.getElementById("stockPriceInput").value = "";
     document.getElementById("stockQtyInput").value = "";
+
+    // Clear stock cards stats
+    document.getElementById("avg-stk-price").innerHTML = `<strong>$ 0<strong>`;
+    document.getElementById("stk-returns").innerHTML = `<strong>$ 0<strong>`;
+
+    // Revert simulation-stock-text to default text
+    document.getElementById("simulation-stock-text").innerHTML = `
+        Use the form to simulate your stock purchases. <br><br>
+        Enter the date, stock price, and quantity you want to buy, 
+        and we’ll calculate your potential earnings based on the stock’s current price. <br><br>
+        This is a beginner-friendly tool designed to help you understand how stock 
+        investments work and estimate potential returns through simulation.
+      `;
   });
 
 // Add Cards from Javascript
@@ -609,6 +629,31 @@ async function populateStockCards(
 ) {
   const container = document.getElementById("stockCardsContainer");
   container.innerHTML = "";
+
+  let symbol = "";
+
+  if (yourAvgStockPrice != 0 && yourAvgStockPrice < todayStockPrice) {
+    symbol = "▲";
+  } else if (yourAvgStockPrice != 0 && yourAvgStockPrice > todayStockPrice) {
+    symbol = "▼";
+  }
+
+  // Format Numbers
+  todayStockPrice = parseFloat(todayStockPrice).toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+  yourAvgStockPrice = parseFloat(yourAvgStockPrice).toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+  yourTotalStockReturn = parseFloat(yourTotalStockReturn).toLocaleString(
+    undefined,
+    {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }
+  );
 
   // Card 1
   const card1 = document.createElement("div");
@@ -626,7 +671,7 @@ async function populateStockCards(
   card2.innerHTML = `
       <div class="card-body">
         <h6 class="card-title">Your Average <br> Stock Price</h6>
-        <h3 class="card-text"><strong>$ ${yourAvgStockPrice}</strong></h3>
+        <h3 class="card-text" id="avg-stk-price">${symbol} <strong>$ ${yourAvgStockPrice}</strong></h3>
     `;
   container.appendChild(card2);
 
@@ -636,7 +681,7 @@ async function populateStockCards(
   card3.innerHTML = `
       <div class="card-body">
         <h6 class="card-title">Your Total <br> Stock Returns</h6>
-        <h3 class="card-text"><strong>$ ${yourTotalStockReturn}</strong></h3>
+        <h3 class="card-text" id="stk-returns">${symbol} <strong>$ ${yourTotalStockReturn}</strong></h3>
     `;
   container.appendChild(card3);
 }
@@ -682,4 +727,32 @@ function calculateStockStats() {
 
   // Return both AvgStockPrice and totalStockReturn
   return { AvgStockPrice, totalStockReturn };
+}
+
+// Add Cards from Javascript
+function populateDynamicStockText(AvgStockPrice, totalStockReturn) {
+  // Determine if the returns are positive or negative
+  const isPositive = totalStockReturn >= 0;
+
+  // Format Numbers
+  AvgStockPrice = parseFloat(AvgStockPrice).toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+  totalStockReturn = parseFloat(totalStockReturn).toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  // Construct dynamic text based on the returns
+  const simulationText = isPositive
+    ? `Based on your average stock price of $${AvgStockPrice}, it looks like you are making a good investment choice. 
+    If this were an actual investment, you would have earned $${totalStockReturn} to date. <br><br>
+    Good job! 👏`
+    : `Based on your average stock price of $${AvgStockPrice}, it seems that your investment choice has not been profitable so far. 
+    If this were an actual investment, you would have incurred a loss of $${totalStockReturn} to date. <br><br>
+    Keep learning and improving! 💪`;
+
+  // Update the simulation text element
+  document.getElementById("simulation-stock-text").innerHTML = simulationText;
 }

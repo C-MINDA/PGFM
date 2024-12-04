@@ -87,22 +87,18 @@
           >
             <ul class="navbar-nav">
               <li class="nav-item me-4">
-                <a class="nav-link" aria-current="page" href="#">Data</a>
+                <a class="nav-link" aria-current="page" href="#section-1"
+                  >Data</a
+                >
               </li>
               <li class="nav-item me-4">
-                <a class="nav-link" href="#">Prediction</a>
+                <a class="nav-link" href="#section-2">Prediction</a>
               </li>
               <li class="nav-item me-4">
-                <a class="nav-link" href="#">News</a>
+                <a class="nav-link" href="#section-3">News</a>
               </li>
               <li class="nav-item me-4">
-                <a class="nav-link" href="#">News</a>
-              </li>
-              <li class="nav-item me-4">
-                <a class="nav-link" href="#">Simulation</a>
-              </li>
-              <li class="nav-item me-4">
-                <a class="nav-link" href="#">Reviews</a>
+                <a class="nav-link" href="#section-4">Simulation</a>
               </li>
             </ul>
           </div>
@@ -244,14 +240,18 @@
                 id="stockCardsContainer"
               >
                 <!-- Cards will be added dynamically here -->
-            </div>
-            <div class="stock-text-container">
-              <p>
-                Use the form above to enter the date you purchased the stock
-                and the price at which you bought it. We will calculate how
-                much your investment would be worth today based on the stock's
-                current price.
-              </p>
+              </div>
+              <div class="stock-text-container">
+                <p id="simulation-stock-text">
+                  Use the form to simulate your stock purchases. <br /><br />
+                  Enter the date, stock price, and quantity you want to buy, and
+                  we will calculate your potential earnings based on the stock’s
+                  current price.<br /><br />
+                  This is a beginner-friendly tool designed to help you
+                  understand how stock investments work and estimate potential
+                  returns through simulation.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -261,7 +261,52 @@
       <section></section>
     </main>
 
-    <footer></footer>
+    <div class="footer-container">
+      <footer class="py-3 my-3">
+        <!-- Subscribe Form Section -->
+        <div class="justify-content-center mb-3">
+          <div class="text-center">
+            <form>
+              <h5>Subscribe to our newsletter</h5>
+              <p>Monthly digest of what's new and exciting from us.</p>
+              <div class="col-auto d-flex justify-content-center">
+                <input
+                  type="email"
+                  class="form-control smaller-input"
+                  placeholder="Email address"
+                />
+                <button class="btn btn-primary ms-3" type="button">
+                  Subscribe
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Navigation Links Section -->
+        <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+          <li class="nav-item">
+            <a href="#section-1" class="nav-link text-body-secondary">Data</a>
+          </li>
+          <li class="nav-item">
+            <a href="#section-2" class="nav-link text-body-secondary"
+              >Prediction</a
+            >
+          </li>
+          <li class="nav-item">
+            <a href="#section-3" class="nav-link text-body-secondary">News</a>
+          </li>
+          <li class="nav-item">
+            <a href="#section-4" class="nav-link text-body-secondary"
+              >Simulation</a
+            >
+          </li>
+        </ul>
+
+        <!-- Footer Copyright Section -->
+        <p class="text-center text-body-secondary">&copy; 2024 Company, Inc</p>
+      </footer>
+    </div>
 
     <!-- Link to the Javascript file -->
     <script src="config.js"></script>

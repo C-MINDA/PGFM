@@ -165,12 +165,6 @@ h3 {
   width: 30%;
 }
 
-.stock-cards-container p {
-  color: #000b58;
-  font-family: "Fira Sans", serif;
-  font-size: 1.3vw;
-}
-
 .stock-text-container {
   padding: 0px 15px;
 }
@@ -184,6 +178,13 @@ h3 {
 .card-body {
   justify-content: space-between;
   text-align: center;
+}
+
+.footer-container,
+.footer-container .nav-link {
+  color: #000b58;
+  font-family: "Fira Sans", serif;
+  font-size: 1.5vw;
 }
 
 @media screen and (max-width: 992px) {
@@ -286,9 +287,7 @@ h3 {
     margin: 10px 0px;
   }
 
-  .stock-cards-container p {
-    color: #000b58;
-    font-family: "Fira Sans", serif;
+  .card-body h6 {
     font-size: 2.5vw;
   }
 
@@ -300,5 +299,12 @@ h3 {
     color: #ffffff;
     font-family: "Fira Sans", serif;
     font-size: 2vw;
+  }
+
+  .footer-container,
+  .footer-container .nav-link {
+    color: #000b58;
+    font-family: "Fira Sans", serif;
+    font-size: 2.5vw;
   }
 }
